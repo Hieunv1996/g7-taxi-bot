@@ -1,0 +1,167 @@
+{
+  "paras": {
+    "{para.bot_name}": "Thúy Mai",
+    "{para.company_name}": "G7 Taxi"
+  },
+  "requires": {
+    "orders": [
+      "{para.amount}",
+      "{para.type}",
+      "{para.size}",
+      "{para.address}"
+    ],
+    "{para.amount}": {
+      "node_id": 1,
+      "match_regex": [
+        "(một|hai|ba|bốn|năm|sáu|bảy|tám|chín|mười) (?:chiếc|cái|xe)",
+        "\\b(một|hai|ba|bốn|năm|sáu|bảy|tám|chín|mười)\\b",
+        "(\\d+) (?:(?:chiếc|cái|xe))"
+      ]
+    },
+    "{para.type}": {
+      "node_id": 2,
+      "match_regex": [
+        ".*((?:một|hai|ba|bốn|năm|sáu|bảy|tám|chín|\\d)) (?:chỗ|ghế).*",
+        ".*((?:một|hai|ba|bốn|năm|sáu|bảy|tám|chín|\\d) (?:chỗ|ghế).*(?:một|hai|ba|bốn|năm|sáu|bảy|tám|chín|\\d) (?:chỗ|ghế)).*",
+        ".*([1-9]) (?:chỗ|ghế).*",
+        ".*([1-9]) (?:chỗ|ghế).*([1-9]) (?:chỗ|ghế).*"
+      ]
+    },
+    "{para.size}": {
+      "node_id": 3,
+      "match_regex": [
+        ".*((?:một|hai|ba|bốn|năm|sáu|bảy|tám|chín) (?:rộng|to|nhỏ|bé|lớn).*(?:một|hai|ba|bốn|năm|sáu|bảy|tám|chín) (?:rộng|to|nhỏ|bé|lớn)).*",
+        ".*([1-9] (?:rộng|to|nhỏ|bé|lớn).*[1-9] (?:rộng|to|nhỏ|bé|lớn)).*",
+        ".*(rộng|to|nhỏ|bé|lớn).*"
+      ]
+    },
+    "{para.address}": {
+      "node_id": 4,
+      "match_regex": [
+        ".*(?:địa chỉ) (.+(?:ba đình|hoàn kiếm|tây hồ|long biên|cầu giấy|đống đa|hai bà trưng|hoàng mai|thanh xuân|sóc sơn|đông anh|gia lâm|nam từ liêm|thanh trì|bắc từ liêm|mê linh|hà đông|sơn tây|ba vì|phúc thọ|đan phượng|hoài đức|quốc oai|thạch thất|chương mỹ|thanh oai|thường tín|phú xuyên|ứng hòa|mỹ đức|hà nội)).*",
+        ".*(?:đến|tới) (.+(?:ba đình|hoàn kiếm|tây hồ|long biên|cầu giấy|đống đa|hai bà trưng|hoàng mai|thanh xuân|sóc sơn|đông anh|gia lâm|nam từ liêm|thanh trì|bắc từ liêm|mê linh|hà đông|sơn tây|ba vì|phúc thọ|đan phượng|hoài đức|quốc oai|thạch thất|chương mỹ|thanh oai|thường tín|phú xuyên|ứng hòa|mỹ đức|hà nội)).*",
+        ".*((?:số nhà|số|tòa|đường|thôn|công ty).+(?:ba đình|hoàn kiếm|tây hồ|long biên|cầu giấy|đống đa|hai bà trưng|hoàng mai|thanh xuân|sóc sơn|đông anh|gia lâm|nam từ liêm|thanh trì|bắc từ liêm|mê linh|hà đông|sơn tây|ba vì|phúc thọ|đan phượng|hoài đức|quốc oai|thạch thất|chương mỹ|thanh oai|thường tín|phú xuyên|ứng hòa|mỹ đức|hà nội)).*",
+        ".*((?:\\b\\d{1,3}).+(?:ba đình|hoàn kiếm|tây hồ|long biên|cầu giấy|đống đa|hai bà trưng|hoàng mai|thanh xuân|sóc sơn|đông anh|gia lâm|nam từ liêm|thanh trì|bắc từ liêm|mê linh|hà đông|sơn tây|ba vì|phúc thọ|đan phượng|hoài đức|quốc oai|thạch thất|chương mỹ|thanh oai|thường tín|phú xuyên|ứng hòa|mỹ đức|hà nội)).*",
+        ".*(sân bay nội bài).*",
+        ".*(ga hà nội).*",
+        ".*(bến xe mỹ đình).*",
+        ".*(bến xe giáp bát).*"
+      ]
+    }
+  },
+  "regex_para": "{para\\.[^}]+}",
+  "start_node_id": 0,
+  "confirm_node_id": 5,
+  "end_node_id": 6,
+  "stories": [
+    {
+      "node_id": 0,
+      "node_name": "start",
+      "description": "Lời mở đầu của bot",
+      "type": "bot",
+      "match_regex": [],
+      "message": [
+        "Kính chào quý khách, em là {para.bot_name} của {para.company_name}, quý khách muốn đặt xe ở đâu vậy",
+        "Kính chào quý khách, em là {para.bot_name} của {para.company_name}, quý khách cho em xin thông tin đặt xe"
+      ],
+      "start_over_message": [
+        "Rất xin lỗi quý khách vì sai sót, quý khách vui lòng cho {para.bot_name} xin lại thông tin đặt đặt xe của mình."
+      ],
+      "error_message": []
+    },
+    {
+      "node_id": 1,
+      "node_name": "amount",
+      "description": "Hỏi số xe",
+      "type": "bot",
+      "message": [
+        "Dạ, quý khách muốn đặt bao nhiêu xe",
+        "Quý khách muốn đặt mấy xe vậy",
+        "Vâng ạ, vậy quý khách muốn đặt bao nhiêu xe"
+      ],
+      "error_message": [
+        "Xin lỗi quý khách, {para.bot_name} chưa nghe rõ tên số xe quý khách muốn đặt",
+        "Quý khách có thể nhắc lại số lượng xe mà mình muốn đặt giúp {para.bot_name} không"
+      ]
+    },
+    {
+      "node_id": 2,
+      "node_name": "type",
+      "description": "Hỏi loại xe",
+      "type": "bot",
+      "message": [
+        "Quý khách cần đặt loại mấy chỗ vậy",
+        "Quý khách muốn loại mấy chỗ vậy",
+        "Quý khách cần đặt loại mấy chỗ"
+      ],
+      "error_message": [
+        "Xin lỗi quý khách, sỗ chỗ anh chị muốn đặt là bao nhiêu",
+        "Rất tiếc, quý khách đọc lại thông tin số chỗ của xe giúp {para.bot_name} với"
+      ]
+    },
+    {
+      "node_id": 3,
+      "node_name": "size",
+      "description": "Hỏi kích thước xe khách hàng muốn đặt",
+      "type": "bot",
+      "message": [
+        "Dạ, quý khách muốn đặt xe rộng hay nhỏ",
+        "Dạ, anh chị muốn đặt xe lớn hơn nhỏ"
+      ],
+      "error_message": [
+        "Xin lỗi quý khách, {para.bot_name} chưa rõ quý khách muốn đặt xe lớn hay nhỏ"
+      ]
+    },
+    {
+      "node_id": 4,
+      "node_name": "address",
+      "description": "Hỏi địa chỉ giao hàng",
+      "type": "bot",
+      "message": [
+        "Quý khách vui lòng cho {para.bot_name} xin địa chỉ của mình",
+        "Quý khách có thể cho {para.bot_name} biết địa chỉ để xe tới đón",
+        "Quý khách đang ở địa chỉ nào",
+        "Quý khách cho {para.bot_name} xin địa chỉ để xe tới đón"
+      ],
+      "error_message": [
+        "Xin lỗi, quý khách đọc lại thông tin địa chỉ giúp em với"
+      ]
+    },
+    {
+      "node_id": 5,
+      "node_name": "confirm_order",
+      "description": "Confirm đặt hàng",
+      "type": "bot",
+      "match_yes": [
+        ".*(ừ|đúng|ok|uh|chính xác|chuẩn).*"
+      ],
+      "match_no": [
+        ".*(không|sai|sửa|đổi).*"
+      ],
+      "message": [
+        "{para.bot_name} xin xác nhận thông tin đặt xe: {para.amount} chiếc {para.type} chỗ loại {para.size} đến địa chỉ {para.address} đúng không ạ",
+        "Quý khách xác nhận giúp em: {para.amount} xe {para.type} ghế loại {para.size} tới {para.address} đúng không ạ",
+        "Quý khách xác nhận giúp em: {para.amount} chiếc {para.type} ghế loại {para.size} đón tại {para.address} đúng chưa ạ"
+      ],
+      "error_message": [
+        "Quý khách vui lòng xác nhận lại thông tin đơn hàng giúp {para.bot_name}, {para.amount} {para.type} cỡ {para.size} đến địa chỉ {para.address} đúng không ạ"
+      ]
+    },
+    {
+      "node_id": 6,
+      "node_name": "end",
+      "description": "tạm biệt",
+      "type": "bot",
+      "match_regex": [],
+      "message": [
+        "Vâng, anh chị vui lòng chờ xe ạ"
+      ],
+      "error_message": [
+        "Rất xin lỗi vì không hiểu yêu cầu của quý khách, {para.bot_name} sẽ chuyển máy qua điện thoại viên để hỗ trợ quý khách ạ",
+        "{para.bot_name} lấy làm tiếc vì không hiểu yêu cầu của quý khách, ngay sau đây nhân viên tư vấn sẽ hỗ trợ anh chị",
+        "Rất tiếc {para.bot_name} không hiểu yêu cầu của quý khách, sau đây {para.bot_name} sẽ chuyển máy cho điện thoại viên",
+        "Để việc phục vụ quý khách tốt hơn, sau đây nhân viên của {para.company_name} sẽ hỗ trợ anh chị ạ"
+      ]
+    }
+  ]
+}
